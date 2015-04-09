@@ -66,7 +66,7 @@ void draw() {
 }
 
 void setZoom(float z) {
-  zoom = map(z, 0.0, 1.0, 1.0, 10.0);
+  zoom = map(z, 0.0, 1.0, 1.0, 2.5);
 }
 
 void setRotation(float r) {
