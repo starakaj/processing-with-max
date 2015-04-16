@@ -1,0 +1,91 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1343\cocoasubrtf160
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+\margl1440\margr1440\vieww11480\viewh11320\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
+
+\f0\fs24 \cf0 What is Processing?\
+\
+- Processing is a programming language for generative graphics.\
+- Lets you define drawing operations programmatically\
+- Definitely a learning language, not as sophisticated as Cinder or OpenFrameworks, but well suited for lots of visual experimentation.\
+- Lets look at some cool stuff\
+\
+Build the Cities - https://vimeo.com/121096680\
+- Cool so this is a music video made with processing. Some people say it has a strong Processing \'93look\'94\
+- Not sure how the tight visual and audio sync comes about, maybe just a lot of editing\
+\
+Generative Gestaltung - {\field{\*\fldinst{HYPERLINK "http://www.generative-gestaltung.de/code"}}{\fldrslt http://www.generative-gestaltung.de/code}}\
+- Lots of cool examples for stuff to do in Processing. Maybe more bent towards graphic design, but lots of small, easy to digest and re-appropriate examples\
+\
+How does processing work?\
+\
+- You all know Max super well so let\'92s start with processing.\
+- By now you should have processing. Do you now have processing? Get processing.\
+- K so processing files are called sketches. This is a sketch file.\
+- Save it\
+- All processing sketches have two main loops: setup and draw. In setup you get all your stuff ready. Draw is what happens between each frame to draw your stuff\
+- Let\'92s draw a square. Or any shape, whatever.\
+- K so this is a function definition. Everything that goes between the curly braces is what\'92s going to happen in that function.\
+- In setup we define boring stuff like the size of the window, and the background color\
+- We also make the frame (AKA the window) resizable\
+- K now let\'92s draw a rectangle or something. Holy shit that\'92s ugly.\
+\
+How does Max fit in?\
+- Okay so basically we can use Max to handle automation, controls and all kinds of other stuff. The secret is udpsend~\
+- Okay, so let\'92s open up Max.\
+- Now make a slider\
+- Now make a udpsend object\
+- udpsend should really be called OSC send or something, because it secretly pretends that everything you\'92re sending is an Open Sound Control packet.\
+- Open Sound Control is like MIDI but cooler. Here\'92s what Open Sound Control messages look like\
+- Don\'92t worry about getting absolutely all of this. Important stuff: the path and the payload. Remember that.\
+\
+Setup OSC in processing\
+- Cool so let\'92s make a slider and send it to Processing. In Max we pick where we want it to go\'97in this case we\'92re sending a message with the path /boxHue. In Processing we\'92ll decide how to handle that kind of message\
+- First things first, we need the OSC library. There\'92s a lot of packages that extend the functionality of Processing but don\'92t come with processing. For that, Processing has a package manager.\
+Go to Sketch->Import Library->Add Library.\
+- The Library we\'92re looking for is called OSCP5\
+- Once that\'92s installed, go back to your sketch. Go to Sketch->Import Library->oscP5\
+- Processing should do the rest\
+- Next we need to add two things to the top of our sketch: space for the oscp5 object and space for the boxHue coming from Max.\
+- These variable declarations have a type and a name\
+- When we create the OscP5 object, it takes this (for some reason) and a port, which is the address where it will listen to messages from Max. This should be the same as in the udpsend object\
+- Next we plug messages from Max to functions in Processing. We call the plug function of the OscP5 object that we just created with two string argument: the function we\'92d like to call in processing and the name of the message coming from Max\
+\
+Functions in Processing\
+- So now we have to write a function. It\'92s not so bad.\
+- (syntax of functions)\
+- All this function does is set the hue to be whatever\'92s coming from Max\
+- Very finally, we make that hue reflect the color of the square being drawn in Processing\
+\
+LOOK AT THAT OH MY GOD\
+\
+Scaling\
+- The first thing I notice is that we\'92re not covering the full range of hues. Hue goes from 0-255, and our slider in Max goes from 0-127. What do? We could scale up in Processing, or we could scale up in Max.\
+- I don\'92t know that there is a right answer to this problem. I know that while I\'92m trying to find cool matches between sounds and stuff in Max and effects in Processing, I tend to make and break a lot of connections. And in that case, it\'92s nice if no matter where I hook things up between Processing and Max, the values are always scaled the same way.\
+- Also, since we don\'92t have to go to 127 because we\'92re not MIDI, we can just go from 0. to 1., which is more convenient anyway.\
+- So in this class, everything that we send from Max to processing will be a floating point number from 0. to 1., and we\'92ll scale that value appropriately in Processing.\
+- We have to make some changes. And now you can see we\'92re using the full range\
+\
+Cooler stuff\
+- Fine but what cooler stuff can we do with this box? Surely there\'92s something\'85\
+- Let\'92s try Matrix Transformations. Basic idea here is you layer together translations, rotations and scales\
+- Let\'92s add a scale that we plug directly into something coming from Max (scale from 1 to 10)\
+- We have to add a translate call above scale\'97otherwise the scale gets applied before the translate and the amount by which we\'92re translating gets scaled as well. Though maybe that\'92s cool, idk\
+- It\'92s not that bad, Jackie\
+- Let\'92s add our own offset as well, which we\'92ll do with a two-argument OSC message from Max\
+\
+Control it from Max\
+- rand~ gives you some measure of randomness with variable frequency\
+- cycle~ for a good old fashioned LFO\
+\
+Playing audio with Max\
+- First let\'92s get an audio file playing. If you\'92re cool and you have Max 7 you can just drop a file in which is sick. Otherwise do something like with splay~ or something\
+- Now let\'92s take a look at the zsa.descriptor objects\
+- zsa.slope (see also zsa.easy_slope) is nice for measuring bassiness.\
+- zsa.flux (see also zsa.easy_flux) is good for smoother spikes in energy\
+- zsa.bark is really nice for getting \'93perceptual energy\'94 at different frequency regions. Use with zl.mth for funnies.\
+- Now take lots of room for experimentation. Go nuts basically.\
+\
+Looking at other sketches\
+- Just want to show you really quickly a couple of other sketches}
